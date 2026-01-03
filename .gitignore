@@ -4,7 +4,6 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-<<<<<<< HEAD
 pnpm-debug.log*
 lerna-debug.log*
 
@@ -23,7 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-=======
 lerna-debug.log*
 .pnpm-debug.log*
 
@@ -154,4 +152,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
->>>>>>> eb71c5b0fd34ae53ae02402235e8ed83f55ce8f9
