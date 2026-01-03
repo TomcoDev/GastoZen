@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Category, Account, GeminiParsedTransaction } from '../types';
 
+// Esto le dice a TS que confíe en que process.env existe por tu vite.config.ts
 declare const process: {
   env: {
     API_KEY: string;
@@ -17,35 +18,42 @@ export const parseTransactionWithGemini = async (
 ): Promise<GeminiParsedTransaction | null> => {
   
   if (!API_KEY || API_KEY === "undefined") {
-    console.error("API_KEY no detectada.");
+    console.error("Error crítico: La API_KEY no se cargó desde el .env");
     return null;
   }
 
   try {
-    // CAMBIO CLAVE: Usamos la serie Gemini 3
-    // 'gemini-3-flash-preview' es el modelo más avanzado actualmente
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-3-flash-preview" 
-    });
+    // Usamos el modelo flash que es el estándar actual
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const today = new Date().toISOString().split('T')[0];
     const categoryNames = categories.map(c => c.name);
 
-    const prompt = `Eres un asistente contable para Paraguay. 
-    Analiza esta frase del usuario: "${userInput}"
+    // Creamos un prompt ultra simple pero estructurado
+    const prompt = `Actúa como un asistente contable para Paraguay.
+    Analiza esta frase: "${userInput}"
     Categorías disponibles: ${JSON.stringify(categoryNames)}.
     Fecha de hoy: ${today}.
-    
-    REGLA: Si el usuario dice "mil", conviértelo a número (ej: 30mil -> 30000).
-    Responde SOLAMENTE un objeto JSON con: description, amount (number), type (income/expense), categoryName, date (YYYY-MM-DD).`;
+    REGLA: Si dicen "mil", conviértelo a ceros (ej: 50mil -> 50000).
+    Responde ÚNICAMENTE con un JSON que tenga:
+    {
+      "description": string,
+      "amount": number,
+      "type": "income" | "expense",
+      "categoryName": string,
+      "date": "YYYY-MM-DD"
+    }`;
 
+    // Llamada directa sin configuraciones extrañas de versión
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
     
+    // Limpiamos la respuesta de posibles bloques de código markdown
     const jsonStr = text.replace(/```json|```/g, "").trim();
     const data = JSON.parse(jsonStr);
 
+    // Aseguramos que el monto sea un número para que tu Form no explote
     return {
       ...data,
       amount: Number(data.amount) || 0,
@@ -53,7 +61,7 @@ export const parseTransactionWithGemini = async (
     } as GeminiParsedTransaction;
 
   } catch (error) {
-    console.error("Error con Gemini 3:", error);
+    console.error("Error detallado en Gemini:", error);
     return null;
   }
 };
