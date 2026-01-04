@@ -1331,13 +1331,12 @@ const SettingsPage: React.FC = () => {
                     </button>
                     <p className="text-xs text-red-500 dark:text-red-400 mt-2">Advertencia: Esto eliminará permanentemente todos tus datos financieros almacenados en este navegador.</p>
                 </div>
-                 <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
                     <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Acerca de GastoZen</h2>
                     <p className="text-gray-600 dark:text-gray-300">
                         GastoZen es tu amigable gestor de finanzas personales. Registra gastos, administra cuentas y obtén información sobre tus hábitos de consumo.
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Versión: 1.0.4</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Recuerda: La API Key para las funciones de Gemini debe estar configurada en tus variables de entorno (\`process.env.API_KEY\`).</p>
                 </div>
             </div>
         </div>
